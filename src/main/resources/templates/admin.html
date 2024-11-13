@@ -282,7 +282,7 @@
                                         <label class="d-flex justify-content-center" for="roleN" style="font-weight: bold">Role</label>
                                         <select multiple="multiple" th:name="roles" class="form-control" id="roleN" style="height: 60px;" required>
                                             <option th:each="role:${allRoles}"
-                                                    th:value="${role.getId()}"
+                                                    th:value="${role.getRole()}"
                                                     th:text="${role}">
                                             </option>
                                         </select>

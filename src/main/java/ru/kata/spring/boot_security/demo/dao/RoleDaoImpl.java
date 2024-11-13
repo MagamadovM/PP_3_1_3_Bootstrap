@@ -46,8 +46,10 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public Optional<Role> findByName(String name) {
-        return Optional.empty();
+    public Role findByName(String name) {
+        return entityManager.createQuery("SELECT r FROM Role r WHERE r.role = :name", Role.class)
+                .setParameter("name", name)
+                .getSingleResult();
     }
 
     public Role save(Role roleAdmin) {
