@@ -45,10 +45,6 @@ public class UserServiceImp implements UserService {
       userDao.removeUserById(id);
    }
 
-   @Override
-   public User findUser(Long id) {
-      return userDao.findUser(id);
-   }
    @Transactional
    @Override
    public void update(User changedUser) {

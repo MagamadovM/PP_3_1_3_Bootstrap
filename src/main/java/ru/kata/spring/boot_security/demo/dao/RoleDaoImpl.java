@@ -2,6 +2,9 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.models.Role;
+
+import ru.kata.spring.boot_security.demo.service.UserService;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.HashSet;
@@ -11,8 +14,19 @@ import java.util.Set;
 @Repository
 public class RoleDaoImpl implements RoleDao {
 
+    private final UserService userService;
+
     @PersistenceContext
     private EntityManager entityManager;
+
+    public RoleDaoImpl(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostConstruct
+    public void init(){
+        userService.addFirstAdmin();
+    }
 
 
     @Override

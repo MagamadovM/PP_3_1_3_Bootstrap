@@ -10,22 +10,30 @@ import java.util.Set;
 @Service
 public class RoleServiceImpl implements RoleService{
 
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
 
-    @Autowired
     public RoleServiceImpl(RoleDao roleDao) {
         this.roleDao = roleDao;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Role findRole(Long id) {
         return roleDao.findRole(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<Role> rolesSet() {
         return roleDao.rolesSet();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Role findRoleByName(String name) {
+        return roleDao.findByName(name).orElseThrow();
+    }
+
     @Transactional
     @Override
     public void add(Role role) {

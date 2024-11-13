@@ -1,10 +1,10 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.models.User;
 
 @Service
 public class UserDetaisServiceImpl implements UserDetailsService {
@@ -15,7 +15,7 @@ public class UserDetaisServiceImpl implements UserDetailsService {
         this.userDao = userDao;
     }
     @Override
-    public UserDetails loadUserByUsername(String login) {
+    public User loadUserByUsername(String login) {
         return userDao.findUserByLogin(login);
     }
 }

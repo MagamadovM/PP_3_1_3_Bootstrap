@@ -7,5 +7,5 @@ public interface RoleService {
     Role findRole(Long id);
     Set<Role> rolesSet();
     void add(Role role);
-
+    Role findRoleByName(String name);
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,19 +22,14 @@ import java.util.Set;
 @Controller
 public class UserController {
 
-    private UserService userService;
-    private RoleService roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
-    @Autowired
-    public UserController(UserService userService,RoleService roleService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
 
-    @PostConstruct
-    public void init(){
-        userService.addFirstAdmin();
-    }
 
     @GetMapping("/")
     public String printUsers() {
@@ -46,10 +40,10 @@ public class UserController {
     public String printUsers(@ModelAttribute("user") User user, ModelMap model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User signedUser = (User) authentication.getPrincipal();
-        model.addAttribute( "allUsers", userService.listUsers());
+        model.addAttribute("allUsers", userService.listUsers());
         model.addAttribute("signedUser", signedUser);
-        model.addAttribute( "allRoles", roleService.rolesSet());
-        model.addAttribute( "roleSelect", new ArrayList<Long>());
+        model.addAttribute("allRoles", roleService.rolesSet());
+        model.addAttribute("roleSelect", new ArrayList<Long>());
         return "admin";
     }
 
@@ -63,10 +57,11 @@ public class UserController {
     @PostMapping("/admin/new")
     public String addUser(@ModelAttribute("user") User user) {
         Set<Role> roles = new HashSet<>();
-        for (Role role : user.getRoles()) {
-            Long id = Long.parseLong(role.getRole());
-            roles.add(roleService.findRole(id));
-        }
+        user.getRoles().forEach(role -> {
+            roles.add(
+                    roleService.findRoleByName(role.getRole())
+            );
+        });
         user.setRoles(roles);
         userService.add(user);
         return "redirect:/admin";
@@ -74,8 +69,8 @@ public class UserController {
 
 
     @PostMapping("/admin/change")
-    public String update(@RequestParam (required = false) List<Long> roleSelectedID, @ModelAttribute("user") User changedUser) {
-        for(Long roleIdFromFront: roleSelectedID){
+    public String update(@RequestParam(required = false) List<Long> roleSelectedID, @ModelAttribute("user") User changedUser) {
+        for (Long roleIdFromFront : roleSelectedID) {
             changedUser.setRoles(roleService.findRole(roleIdFromFront));
         }
         userService.update(changedUser);
